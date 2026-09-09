@@ -1,4 +1,25 @@
-import os
+import cv2
+import numpy as np
+import pytesseract
+from PIL import Image
+
+def extract_numbers_from_image(image_path):
+    # ပုံကို ဖတ်ရန်
+    img = cv2.imread(image_path)
+    
+    # ၁။ Grayscale (အဖြူအမည်း) ပြောင်းရန်
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # ၂။ Thresholding လုပ်၍ စာသားကို ပိုထင်ရှားစေရန်
+    # (ဆူညံသံများကို ဖယ်ရှားပြီး စာသားကို ပိုမိုပြတ်သားစေသည်)
+    processed_img = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    
+    # ၃။ Tesseract ဖြင့် နံပါတ်များကို သီးသန့်ဖတ်ခိုင်းရန် (Config: digits သုံးခြင်းဖြင့် နံပါတ်များကို ပိုမှန်စေသည်)
+    custom_config = r'--oem 3 --psm 6'
+    text = pytesseract.image_to_string(processed_img, config=custom_config)
+    
+    return text
+    import os
 import re
 import io
 from flask import Flask
