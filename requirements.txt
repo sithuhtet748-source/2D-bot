@@ -1,3 +1,7 @@
 python-telegram-bot
+Pillow
+pytesseract
+Flask
+python-telegram-bot
 flask
 
