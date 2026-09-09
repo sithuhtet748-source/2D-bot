@@ -1,4 +1,23 @@
-import cv2
+import pytesseract
+from PIL import Image, ImageEnhance, ImageOps
+
+def extract_numbers_from_image(image_path):
+    # ၁။ ပုံကို ဖွင့်ရန်
+    img = Image.open(image_path)
+    
+    # ၂။ အဖြူအမည်း (Grayscale) ပြောင်းရန်
+    gray_img = ImageOps.grayscale(img)
+    
+    # ၃။ Contrast ကို မြှင့်တင်၍ စာသားကို ပိုထင်ရှားစေရန်
+    enhancer = ImageEnhance.Contrast(gray_img)
+    enhanced_img = enhancer.enhance(2.0) # အဆ ၂ ဆ ပိုထင်ရှားစေသည်
+    
+    # ၄။ Tesseract ဖြင့် နံပါတ်များကို ဖတ်ရန် (PSM 6 က စာကြောင်းလိုက် သို့မဟုတ် ဘလောက်လိုက် ဖတ်ရန် အကောင်းဆုံးဖြစ်သည်)
+    custom_config = r'--oem 3 --psm 6'
+    text = pytesseract.image_to_string(enhanced_img, config=custom_config)
+    
+    return text.strip()
+    import cv2
 import numpy as np
 import pytesseract
 from PIL import Image
